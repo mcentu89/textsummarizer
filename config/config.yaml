@@ -1,0 +1,13 @@
+artifacts_root: artifacts
+
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  source_URL_train: https://huggingface.co/datasets/knkarthick/samsum/resolve/main/train.csv
+  source_URL_test: https://huggingface.co/datasets/knkarthick/samsum/resolve/main/test.csv
+  source_URL_val: https://huggingface.co/datasets/knkarthick/samsum/resolve/main/validation.csv
+  
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_path: artifacts/data_ingestion
+  tokenizer_name: google/pegasus-cnn_dailymail
+
