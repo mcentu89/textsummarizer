@@ -1,6 +1,6 @@
 from src.textSummarizer.utils.common import read_yaml, create_directories
 from src.textSummarizer.constants import *
-from src.textSummarizer.entity import DataIngestionConfig, DataTransformationConfig
+from src.textSummarizer.entity import DataIngestionConfig, DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig
 
 # Creamos el configuration mangarer, que se encargará de cargar el archivo de configuración y devolver la configuración de cada componente.
 class ConfigurationManager:
@@ -31,3 +31,44 @@ class ConfigurationManager:
             tokenizer_name = config.tokenizer_name)
         
         return data_transformation_config
+    
+    def get_model_trainer_config(self) -> ModelTrainerConfig:
+        config = self.config.model_trainer
+        params = self.params.TrainingArguments
+
+        create_directories([config.root_dir])
+    
+        model_trainer_config = ModelTrainerConfig(
+            root_dir = Path(config.root_dir),
+            data_path = Path(config.data_path),
+            model_ckpt = config.model_ckpt,
+            num_train_epochs = params.num_train_epochs,
+            warmup_steps = params.warmup_steps,
+            per_device_train_batch_size = params.per_device_train_batch_size,
+            per_device_eval_batch_size = params.per_device_eval_batch_size,
+            weight_decay = params.weight_decay,
+            logging_steps = params.logging_steps,
+            evaluation_strategy = params.evaluation_strategy,
+            eval_steps = params.eval_steps,
+            save_steps = params.save_steps,
+            gradient_accumulation_steps = params.gradient_accumulation_steps
+        )
+        
+        return model_trainer_config
+    
+    def get_evaluation_config(self) -> ModelEvaluationConfig:
+        evaluation_config = self.config.model_evaluation
+
+        create_directories([evaluation_config.root_dir])
+
+        model_evaluation_config = ModelEvaluationConfig(
+            root_dir=Path(evaluation_config.root_dir),
+            data_path=Path(evaluation_config.data_path),
+            model_path=Path(evaluation_config.model_path),
+            tokenizer_path=Path(evaluation_config.tokenizer_path),
+            metric_file_name=Path(evaluation_config.metric_file_name)
+        )
+
+        return model_evaluation_config
+    
+    
